@@ -8,6 +8,7 @@ NodeList.prototype.filter = Array.prototype.filter
 NodeList.prototype.reduce = Array.prototype.reduce
 
 const save = 'saves/Chris_187014416'
+const terrainToRemove = ['Tree', 'Grass']
 
 const findLocation = (doc, name) => doc
   .getElementsByTagName('SaveGame')[0]
@@ -68,7 +69,7 @@ const processSave = async () => {
     .forEach((feature) => {
       const type = feature.getElementsByTagName('TerrainFeature')[0].getAttribute('xsi:type')
 
-      if (type === 'Tree') {
+      if (terrainToRemove.includes(type)) {
         terrainFeatures.removeChild(feature)
       }
     })
