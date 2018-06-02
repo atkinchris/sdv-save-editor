@@ -5,6 +5,7 @@ const { NodeList } = require('xmldom/dom')
 NodeList.prototype.find = Array.prototype.find
 NodeList.prototype.forEach = Array.prototype.forEach
 NodeList.prototype.filter = Array.prototype.filter
+NodeList.prototype.reduce = Array.prototype.reduce
 
 const save = 'saves/Chris_187014416'
 
@@ -16,12 +17,19 @@ const findLocation = (doc, name) => doc
     tag.getElementsByTagName('name').find(({ textContent }) => textContent === name)
   ))
 
+const removeChildren = (node) => {
+  while (node.firstChild) {
+    node.removeChild(node.firstChild)
+  }
+}
+
 const processSave = async () => {
   const xml = await fs.readFile(save, 'utf8')
   const parser = new DOMParser()
   const doc = parser.parseFromString(xml)
 
-  const terrainFeatures = findLocation(doc, 'Farm').getElementsByTagName('terrainFeatures')[0]
+  const farm = findLocation(doc, 'Farm')
+  const terrainFeatures = farm.getElementsByTagName('terrainFeatures')[0]
 
   terrainFeatures
     .getElementsByTagName('item')
@@ -32,6 +40,22 @@ const processSave = async () => {
         terrainFeatures.removeChild(feature)
       }
     })
+
+  removeChildren(farm.getElementsByTagName('resourceClumps')[0])
+
+  // const types = findLocation(doc, 'Farm')
+  //   .getElementsByTagName('objects')[0]
+  //   .getElementsByTagName('item')
+  //   .reduce((out, item) => {
+  //     const type = item
+  //       .getElementsByTagName('value')[0]
+  //       .getElementsByTagName('Object')[0]
+  //       .getElementsByTagName('name')[0]
+  //       .textContent
+
+  //     out.add(type)
+  //     return out
+  //   }, new Set())
 
   const xmlSerializer = new XMLSerializer()
   const xmlBuffer = xmlSerializer.serializeToString(doc)
