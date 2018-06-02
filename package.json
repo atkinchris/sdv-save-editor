@@ -1,0 +1,15 @@
+{
+  "scripts": {
+    "start": "node ."
+  },
+  "main": "index.js",
+  "dependencies": {
+    "fs-extra": "^6.0.1",
+    "xmldom": "https://github.com/atkinchris/xmldom.git"
+  },
+  "devDependencies": {
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.12.0"
+  }
+}
