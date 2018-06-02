@@ -23,14 +23,46 @@ const removeChildren = (node) => {
   }
 }
 
+const logTypes = (location) => {
+  const objectTypes = location
+    .getElementsByTagName('objects')[0]
+    .getElementsByTagName('item')
+    .reduce((out, item) => {
+      const type = item
+        .getElementsByTagName('value')[0]
+        .getElementsByTagName('Object')[0]
+        .getElementsByTagName('name')[0]
+        .textContent
+
+      out.add(type)
+      return out
+    }, new Set())
+
+  console.log('Object Types', Array.from(objectTypes))
+
+  const featureTypes = location
+    .getElementsByTagName('terrainFeatures')[0]
+    .getElementsByTagName('item')
+    .reduce((out, feature) => {
+      const type = feature.getElementsByTagName('TerrainFeature')[0].getAttribute('xsi:type')
+
+      out.add(type)
+      return out
+    }, new Set())
+
+  console.log('Feature Types', Array.from(featureTypes))
+}
+
 const processSave = async () => {
   const xml = await fs.readFile(save, 'utf8')
   const parser = new DOMParser()
   const doc = parser.parseFromString(xml)
 
   const farm = findLocation(doc, 'Farm')
-  const terrainFeatures = farm.getElementsByTagName('terrainFeatures')[0]
 
+  logTypes(farm)
+
+  const terrainFeatures = farm.getElementsByTagName('terrainFeatures')[0]
   terrainFeatures
     .getElementsByTagName('item')
     .forEach((feature) => {
@@ -42,20 +74,6 @@ const processSave = async () => {
     })
 
   removeChildren(farm.getElementsByTagName('resourceClumps')[0])
-
-  // const types = findLocation(doc, 'Farm')
-  //   .getElementsByTagName('objects')[0]
-  //   .getElementsByTagName('item')
-  //   .reduce((out, item) => {
-  //     const type = item
-  //       .getElementsByTagName('value')[0]
-  //       .getElementsByTagName('Object')[0]
-  //       .getElementsByTagName('name')[0]
-  //       .textContent
-
-  //     out.add(type)
-  //     return out
-  //   }, new Set())
 
   const xmlSerializer = new XMLSerializer()
   const xmlBuffer = xmlSerializer.serializeToString(doc)
