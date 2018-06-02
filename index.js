@@ -9,6 +9,7 @@ NodeList.prototype.reduce = Array.prototype.reduce
 
 const save = 'saves/Chris_187014416'
 const terrainToRemove = ['Tree', 'Grass']
+const objectsToRemove = ['Twig', 'Stone', 'Weeds']
 
 const findLocation = (doc, name) => doc
   .getElementsByTagName('SaveGame')[0]
@@ -71,6 +72,22 @@ const processSave = async () => {
 
       if (terrainToRemove.includes(type)) {
         terrainFeatures.removeChild(feature)
+      }
+    })
+
+  const objects = farm.getElementsByTagName('objects')[0]
+
+  objects
+    .getElementsByTagName('item')
+    .forEach((item) => {
+      const type = item
+        .getElementsByTagName('value')[0]
+        .getElementsByTagName('Object')[0]
+        .getElementsByTagName('name')[0]
+        .textContent
+
+      if (objectsToRemove.includes(type)) {
+        objects.removeChild(item)
       }
     })
 
