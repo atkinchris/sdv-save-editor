@@ -8,8 +8,9 @@ NodeList.prototype.filter = Array.prototype.filter
 NodeList.prototype.reduce = Array.prototype.reduce
 
 const save = 'saves/Chris_187014416'
-const terrainToRemove = ['Tree', 'Grass']
+const terrainToRemove = ['Grass']
 const objectsToRemove = ['Twig', 'Stone', 'Weeds']
+const objectsToHeal = ['Wood Fence']
 
 const findLocation = (doc, name) => doc
   .getElementsByTagName('SaveGame')[0]
@@ -80,14 +81,15 @@ const processSave = async () => {
   objects
     .getElementsByTagName('item')
     .forEach((item) => {
-      const type = item
-        .getElementsByTagName('value')[0]
-        .getElementsByTagName('Object')[0]
-        .getElementsByTagName('name')[0]
-        .textContent
+      const object = item.getElementsByTagName('value')[0].getElementsByTagName('Object')[0]
+      const type = object.getElementsByTagName('name')[0].textContent
 
       if (objectsToRemove.includes(type)) {
         objects.removeChild(item)
+      }
+
+      if (objectsToHeal.includes(type)) {
+        object.getElementsByTagName('health')[0].textContent = object.getElementsByTagName('maxHealth')[0].textContent
       }
     })
 
